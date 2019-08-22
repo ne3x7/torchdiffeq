@@ -4,8 +4,8 @@ from . import rk_common
 
 class Euler(FixedGridODESolver):
 
-    def step_func(self, func, t, dt, y):
-        return tuple(dt * f_ for f_ in func(t, y))
+    def step_func(self, func, t, dt, y, y_exog):
+        return tuple(dt * f_ for f_ in func(t, y, y_exog))
 
     @property
     def order(self):

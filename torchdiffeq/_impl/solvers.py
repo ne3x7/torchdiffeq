@@ -6,12 +6,13 @@ from .misc import _assert_increasing, _handle_unused_kwargs
 class AdaptiveStepsizeODESolver(object):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, func, y0, atol, rtol, **unused_kwargs):
+    def __init__(self, func, y0, y_exog, atol, rtol, **unused_kwargs):
         _handle_unused_kwargs(self, unused_kwargs)
         del unused_kwargs
 
         self.func = func
         self.y0 = y0
+        self.y_exog = y_exog
         self.atol = atol
         self.rtol = rtol
 
@@ -36,7 +37,7 @@ class AdaptiveStepsizeODESolver(object):
 class FixedGridODESolver(object):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, func, y0, step_size=None, grid_constructor=None, **unused_kwargs):
+    def __init__(self, func, y0, y_exog, step_size=None, grid_constructor=None, **unused_kwargs):
         unused_kwargs.pop('rtol', None)
         unused_kwargs.pop('atol', None)
         _handle_unused_kwargs(self, unused_kwargs)
@@ -44,6 +45,7 @@ class FixedGridODESolver(object):
 
         self.func = func
         self.y0 = y0
+        self.y_exog = y_exog
 
         if step_size is not None and grid_constructor is None:
             self.grid_constructor = self._grid_constructor_from_step_size(step_size)
@@ -73,7 +75,7 @@ class FixedGridODESolver(object):
         pass
 
     @abc.abstractmethod
-    def step_func(self, func, t, dt, y):
+    def step_func(self, func, t, dt, y, y_exog):
         pass
 
     def integrate(self, t):
@@ -88,7 +90,7 @@ class FixedGridODESolver(object):
         j = 1
         y0 = self.y0
         for t0, t1 in zip(time_grid[:-1], time_grid[1:]):
-            dy = self.step_func(self.func, t0, t1 - t0, y0)
+            dy = self.step_func(self.func, t0, t1 - t0, y0, self.y_exog[j])
             y1 = tuple(y0_ + dy_ for y0_, dy_ in zip(y0, dy))
             y0 = y1
 
