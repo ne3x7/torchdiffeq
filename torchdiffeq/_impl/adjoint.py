@@ -39,6 +39,11 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 t = t.to(y[0].device).detach().requires_grad_(True)
                 y = tuple(y_.detach().requires_grad_(True) for y_ in y)
                 func_eval = func(t, y, exog_y)
+                print(func_eval.device)
+                print(t.device)
+                print(y.device)
+                print(f_params.device)
+                print(*list(adj_y_.device for adj_y_ in adj_y))
                 vjp_t, *vjp_y_and_params = torch.autograd.grad(
                     func_eval, (t,) + y + f_params,
                     tuple(-adj_y_ for adj_y_ in adj_y), allow_unused=True, retain_graph=True
@@ -79,9 +84,6 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 if adj_params.numel() == 0:
                     adj_params = torch.tensor(0.).to(adj_y[0])
                 aug_y0 = (*ans_i, *adj_y, adj_time, adj_params)
-                print(*list(x.device for x in aug_y0))
-                print(torch.stack([t[i], t[i - 1]]).device)
-                print(torch.stack([y_exog[i], y_exog[i-1]]).device)
                 aug_ans = odeint(
                     augmented_dynamics, aug_y0,
                     torch.stack([t[i], t[i - 1]]),
