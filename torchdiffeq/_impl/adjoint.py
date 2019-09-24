@@ -39,10 +39,10 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 t = t.to(y[0].device).detach().requires_grad_(True)
                 y = tuple(y_.detach().requires_grad_(True) for y_ in y)
                 func_eval = func(t, y, exog_y)
-                print(func_eval.device)
+                print(*list(func_eval_.device for func_eval_ in func_eval))
                 print(t.device)
-                print(y.device)
-                print(f_params.device)
+                print(*list(y_.device for y_ in y))
+                print(*list(f_params_.device for f_params_ in f_params))
                 print(*list(adj_y_.device for adj_y_ in adj_y))
                 vjp_t, *vjp_y_and_params = torch.autograd.grad(
                     func_eval, (t,) + y + f_params,
