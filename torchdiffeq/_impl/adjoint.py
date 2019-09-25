@@ -87,7 +87,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
                     rtol=rtol, atol=atol, method=method, options=options
                 )
 
-                print(*list(torch.isnan(aug_ans[i]).any() isinstance(aug_ans[i], torch.Tensor) else torch.isnan(aug_ans[i][0]).any() for i in range(len(aug_ans))))
+                print(*list(torch.isnan(aug_ans[i]).any() if isinstance(aug_ans[i], torch.Tensor) else torch.isnan(aug_ans[i][0]).any() for i in range(len(aug_ans))))
 
                 # Unpack aug_ans.
                 adj_y = aug_ans[n_tensors:2 * n_tensors]
