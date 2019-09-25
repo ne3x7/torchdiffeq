@@ -24,6 +24,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
     def backward(ctx, *grad_output):
 
         t, y_exog, flat_params, *ans = ctx.saved_tensors
+        print(torch.isnan(ans).any())
         ans = tuple(ans)
         func, rtol, atol, method, options = ctx.func, ctx.rtol, ctx.atol, ctx.method, ctx.options
         n_tensors = len(ans)
