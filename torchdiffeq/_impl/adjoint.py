@@ -40,9 +40,6 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 y = tuple(y_.detach().requires_grad_(True) for y_ in y)
                 func_eval = func(t, y, exog_y)
 
-                print(t.item(), 't', torch.isnan(t).any(), 'y', torch.isnan(y[0]).any(), 'exog',
-                torch.isnan(exog_y).any(), 'eval', torch.isnan(func_eval[0]).any())
-
                 vjp_t, *vjp_y_and_params = torch.autograd.grad(
                     func_eval, (t,) + y + f_params,
                     tuple(-adj_y_ for adj_y_ in adj_y), allow_unused=True, retain_graph=True
@@ -90,7 +87,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
                     rtol=rtol, atol=atol, method=method, options=options
                 )
 
-                print(torch.isnan(aug_ans[0]).any())
+                print(*list(torch.isnan(aug_ans[i]).any() isinstance(aug_ans[i], torch.Tensor) else torch.isnan(aug_ans[i][0]).any() for i in range(len(aug_ans))))
 
                 # Unpack aug_ans.
                 adj_y = aug_ans[n_tensors:2 * n_tensors]
