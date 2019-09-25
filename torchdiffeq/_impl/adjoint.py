@@ -40,7 +40,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 y = tuple(y_.detach().requires_grad_(True) for y_ in y)
                 func_eval = func(t, y, exog_y)
 
-                print(t.item(), 't', torch.isnan(t[0]).any(), 'y', torch.isnan(y[0]).any(), 'exog',
+                print(t.item(), 't', torch.isnan(t).any(), 'y', torch.isnan(y[0]).any(), 'exog',
                 torch.isnan(exog_y).any(), 'eval', torch.isnan(func_eval[0]).any())
 
                 vjp_t, *vjp_y_and_params = torch.autograd.grad(
