@@ -86,6 +86,8 @@ class OdeintAdjointMethod(torch.autograd.Function):
                     rtol=rtol, atol=atol, method=method, options=options
                 )
 
+                print(aug_ans)
+
                 # Unpack aug_ans.
                 adj_y = aug_ans[n_tensors:2 * n_tensors]
                 adj_time = aug_ans[2 * n_tensors]
@@ -101,8 +103,6 @@ class OdeintAdjointMethod(torch.autograd.Function):
 
             time_vjps.append(adj_time)
             time_vjps = torch.cat(time_vjps[::-1])
-
-            print(adj_params)
 
             return (*adj_y, None, time_vjps, adj_params, None, None, None, None, torch.zeros_like(y_exog))
 
