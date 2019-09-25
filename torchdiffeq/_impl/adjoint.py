@@ -40,11 +40,11 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 y = tuple(y_.detach().requires_grad_(True) for y_ in y)
                 func_eval = func(t, y, exog_y)
 
-                if t.item() > 0.9990:
+                if t.item() > 0.9:
                     print('t', t, 'y', y, 'exog', exog_y)
                     print('eval', func_eval)
 
-                if t.item() == 0.999:
+                if t.item() == 0.9:
                     assert None is not None
 
                 vjp_t, *vjp_y_and_params = torch.autograd.grad(
