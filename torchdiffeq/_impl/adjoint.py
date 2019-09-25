@@ -24,8 +24,8 @@ class OdeintAdjointMethod(torch.autograd.Function):
     def backward(ctx, *grad_output):
 
         t, y_exog, flat_params, *ans = ctx.saved_tensors
-        print(torch.isnan(ans).any())
         ans = tuple(ans)
+        print(*list(torch.isnan(a).any() for a in ans))
         func, rtol, atol, method, options = ctx.func, ctx.rtol, ctx.atol, ctx.method, ctx.options
         n_tensors = len(ans)
         f_params = tuple(func.parameters())
@@ -48,7 +48,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
             vjp_y = vjp_y_and_params[:n_tensors]
             vjp_params = vjp_y_and_params[n_tensors:]
 
-            print(*list(torch.isnan(v).any() if isinstance(v, torch.Tensor) else torch.isnan(v[0]).any() for i, v in enumerate((t, y, func_eval, vjp_y, vjp_params))))
+            # print(*list(torch.isnan(v).any() if isinstance(v, torch.Tensor) else torch.isnan(v[0]).any() for i, v in enumerate((t, y, func_eval, vjp_y, vjp_params))))
 
             # autograd.grad returns None if no gradient, set to zero.
             vjp_t = torch.zeros_like(t) if vjp_t is None else vjp_t
