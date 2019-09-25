@@ -40,7 +40,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
                 y = tuple(y_.detach().requires_grad_(True) for y_ in y)
                 func_eval = func(t, y, exog_y)
 
-                if t.item() < 1:
+                if t.item() > 0.9990:
                     print('t', t, 'y', y, 'exog', exog_y)
                     print('eval', func_eval)
 
