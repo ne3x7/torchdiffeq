@@ -102,7 +102,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
             time_vjps.append(adj_time)
             time_vjps = torch.cat(time_vjps[::-1])
 
-            return (*adj_y, None, time_vjps, adj_params, None, None, None, None, None)
+            return (*adj_y, None, time_vjps, adj_params, None, None, None, None, torch.zeros_like(y_exog))
 
 
 def odeint_adjoint(func, y0, y_exog, t, rtol=1e-6, atol=1e-12, method=None, options=None):
