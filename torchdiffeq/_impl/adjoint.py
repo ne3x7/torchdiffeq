@@ -90,7 +90,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
                     rtol=rtol, atol=atol, method=method, options=options
                 )
 
-                print(aug_ans[0])
+                print(torch.isnan(aug_ans[0]).any())
 
                 # Unpack aug_ans.
                 adj_y = aug_ans[n_tensors:2 * n_tensors]
