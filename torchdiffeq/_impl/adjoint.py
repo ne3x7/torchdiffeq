@@ -47,6 +47,8 @@ class OdeintAdjointMethod(torch.autograd.Function):
             vjp_y = vjp_y_and_params[:n_tensors]
             vjp_params = vjp_y_and_params[n_tensors:]
 
+            print(*list(torch.isnan(v).any() if isinstance(v, torch.Tensor) else torch.isnan(v[0]).any() for i, v in enumerate((t, y, func_eval, vjp_y, vjp_params))))
+
             # autograd.grad returns None if no gradient, set to zero.
             vjp_t = torch.zeros_like(t) if vjp_t is None else vjp_t
             vjp_y = tuple(torch.zeros_like(y_) if vjp_y_ is None else vjp_y_ for vjp_y_, y_ in zip(vjp_y, y))
@@ -87,7 +89,7 @@ class OdeintAdjointMethod(torch.autograd.Function):
                     rtol=rtol, atol=atol, method=method, options=options
                 )
 
-                print(*list(torch.isnan(aug_ans[i]).any() if isinstance(aug_ans[i], torch.Tensor) else torch.isnan(aug_ans[i][0]).any() for i in range(len(aug_ans))))
+                # print(*list(torch.isnan(aug_ans[i]).any() if isinstance(aug_ans[i], torch.Tensor) else torch.isnan(aug_ans[i][0]).any() for i in range(len(aug_ans))))
 
                 # Unpack aug_ans.
                 adj_y = aug_ans[n_tensors:2 * n_tensors]
