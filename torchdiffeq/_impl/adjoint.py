@@ -25,7 +25,6 @@ class OdeintAdjointMethod(torch.autograd.Function):
 
         t, y_exog, flat_params, *ans = ctx.saved_tensors
         ans = tuple(ans)
-        print(*list(torch.isnan(a).any() for a in ans))
         func, rtol, atol, method, options = ctx.func, ctx.rtol, ctx.atol, ctx.method, ctx.options
         n_tensors = len(ans)
         f_params = tuple(func.parameters())
