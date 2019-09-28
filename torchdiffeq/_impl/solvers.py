@@ -6,10 +6,6 @@ def process(x):
     if len(x.data.shape) > 1:
         x.data[..., 3].clamp_(-0.2, 0.2)
         x.data[..., 6].clamp_(-6.4, 7)
-    else:
-        print(x.data)
-        x.data[3].clamp_(-0.2, 0.2)
-        x.data[6].clamp_(-6.4, 7)
 
     return x
 
