@@ -1,7 +1,6 @@
 from .solvers import FixedGridODESolver
 from . import rk_common
 
-
 class Euler(FixedGridODESolver):
 
     def step_func(self, func, t, dt, y, y_exog):

@@ -2,6 +2,11 @@ import abc
 import torch
 from .misc import _assert_increasing, _handle_unused_kwargs
 
+def process(x):
+    x.data[:, 3].clamp_(-0.2, 0.2)
+    x.data[:, 6].clamp_(-6.4, 7)
+
+    return x
 
 class AdaptiveStepsizeODESolver(object):
     __metaclass__ = abc.ABCMeta
@@ -91,7 +96,7 @@ class FixedGridODESolver(object):
         y0 = self.y0
         for t0, t1 in zip(time_grid[:-1], time_grid[1:]):
             dy = self.step_func(self.func, t0, t1 - t0, y0, self.y_exog[j])
-            y1 = tuple(y0_ + dy_ for y0_, dy_ in zip(y0, dy))
+            y1 = tuple(process(y0_ + dy_) for y0_, dy_ in zip(y0, dy))
             y0 = y1
 
             while j < len(t) and t1 >= t[j]:
