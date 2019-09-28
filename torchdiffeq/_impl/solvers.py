@@ -3,7 +3,7 @@ import torch
 from .misc import _assert_increasing, _handle_unused_kwargs
 
 def process(x):
-    print(x.data.shape)
+    print(x.data)
     if len(x.data.shape) > 1:
         x.data[..., 3].clamp_(-0.2, 0.2)
         x.data[..., 6].clamp_(-6.4, 7)
